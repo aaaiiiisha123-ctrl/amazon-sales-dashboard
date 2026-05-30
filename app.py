@@ -5,7 +5,7 @@ import plotly.express as px
 
 st.title("Amazon Sales Dashboard 📊")
 
-df = pd.read_csv(r"C:\Users\aisha\OneDrive\Desktop\python_practice\amazon.csv\amazon.csv")
+df = pd.read_csv("amazon.csv/amazon.csv")
 df["rating"] = pd.to_numeric(df["rating"], errors="coerce")
 df["discount_percentage"] = pd.to_numeric(
     df["discount_percentage"].str.replace("%", ""), errors="coerce"
@@ -60,7 +60,7 @@ from sklearn.ensemble import RandomForestRegressor
 
 
 # Fresh data load karo sirf ML ke liye
-df_ml = pd.read_csv(r"C:\Users\aisha\OneDrive\Desktop\python_practice\amazon.csv\amazon.csv")
+df_ml = pd.read_csv("amazon.csv/amazon.csv")
 
 df_ml["actual_price"] = pd.to_numeric(
     df_ml["actual_price"].str.replace("₹","").str.replace(",",""),

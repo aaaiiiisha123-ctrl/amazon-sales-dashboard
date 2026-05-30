@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -53,3 +54,40 @@ fig3  = px.bar(
     title="category wise profit analysis"
 )
 st.plotly_chart(fig3)
+
+import numpy as np
+from sklearn.ensemble import RandomForestRegressor
+
+
+# Fresh data load karo sirf ML ke liye
+df_ml = pd.read_csv(r"C:\Users\aisha\OneDrive\Desktop\python_practice\amazon.csv\amazon.csv")
+
+df_ml["actual_price"] = pd.to_numeric(
+    df_ml["actual_price"].str.replace("₹","").str.replace(",",""),
+    errors="coerce"
+)
+df_ml["discount_percentage"] = pd.to_numeric(
+    df_ml["discount_percentage"].str.replace("%",""),
+    errors="coerce"
+)
+df_ml["rating"] = pd.to_numeric(df_ml["rating"], errors="coerce")
+df_ml["rating_count"] = pd.to_numeric(
+    df_ml["rating_count"].str.replace(",",""),
+    errors="coerce"
+)
+
+df_ml = df_ml.dropna(subset=["actual_price","discount_percentage","rating","rating_count"])
+
+X = df_ml[["discount_percentage","rating","rating_count"]]
+y = df_ml["actual_price"]
+
+
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+model.fit(X, y)
+
+user_discount = st.slider("Discount %:", 0, 90, 10)
+user_rating = st.slider("Rating:", 1.0, 5.0, 3.0)
+user_rating_count = st.number_input("Rating Count:", value=100)
+
+predicted_price = model.predict([[user_discount, user_rating, user_rating_count]])
+st.metric("Predicted Price", f"₹{predicted_price[0]:.2f}")

@@ -31,4 +31,25 @@ top_products = filtered_df.nlargest(10, "rating")
 fig2 = px.bar(top_products, x="product_name", y="rating", title="Top 10 Products")
 st.plotly_chart(fig2)
 
+#create a profit analysis feature in this 
+st.subheader("Profit Analysis")
+df["actual_price"] = pd.to_numeric(
+    df["actual_price"].str.replace("₹","").str.replace(",",""),
+    errors="coerce"
+)
+df["discounted_price"] = pd.to_numeric(
+    df["discounted_price"].str.replace("₹","").str.replace(",",""),
+    errors="coerce"
+)
 
+df["profit"] = df["actual_price"]-df["discounted_price"]
+category_profit = df.groupby("category")["profit"].mean()
+
+#create bar chart for profit analysis
+fig3  = px.bar(
+    category_profit.reset_index(),
+    x="category",
+    y="profit",
+    title="category wise profit analysis"
+)
+st.plotly_chart(fig3)
